@@ -12,7 +12,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        //
+        //holaa
         $service = Service::all();
         return response()->json($service);
     }
