@@ -1,7 +1,13 @@
 <?php
 
+use App\Http\Controllers\api\HomeController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\DepartamentoController;
+use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ServiciosController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +24,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('/',function(){
+    return response()->json([
+        'message'=>'welcome to api '
+    ]);
 });
 //de esto
 
@@ -38,8 +50,44 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // a esto
 
-Route::resource('clients', ClientController::class);
+//  Route::resource('clientes', ClientesController::class);
 
-Route::resource('services', ServiceController::class);
+// Route::resource('empleado', EmpleadoController::class);
+
+// Route::resource('services', ServiceController::class);
+
+// Route::resource('departamento', DepartamentoController::class);
+
+// Route::post('/clients/{client}/services', [ClientController::class, 'attach']);
+
+// Route::post('/departamentos/{departamento}/empleados', [DepartamentoController::class, 'attach']);
+
+// Route::resource('departamento', DepartamentoController::class);
 
 
+// Route::post('/files', [FileController::class, 'store']);
+// Route::get('/files/{id}', [FileController::class, 'show']);
+// Route::put('/files/{id}', [FileController::class, 'update']);
+// Route::delete('/files/{id}', [FileController::class, 'destroy']);
+
+Route::resource('clientes', ClientesController::class);
+
+Route::controller(ClientesController::class)->group(function () {
+
+    Route::get('/clientes', 'index');
+    Route::post('/clientes/store', 'store');
+    Route::get('/clientes/{cliente}/show', 'show');
+    Route::put('/clientes/{cliente}/update', 'update');
+    Route::delete('/api/clientes/{cliente}', 'ClientesController@destroy');
+
+});
+
+Route::controller(ServiciosController::class)->group(function () {
+
+    Route::get('/servicios', 'index');
+    Route::post('/servicios/store', 'store');
+    Route::get('/servicios/{servicio}/show', 'show');
+    Route::put('/servicios/{servicio}/update', 'update');
+    Route::delete('/api/servicios/{servicio}', 'ServiciosController@destroy');
+
+});
