@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
+            $table->unsignedBigInteger('encargado_id')->nullable();
             $table->timestamps();
 
             // Definir la restricción de clave externa

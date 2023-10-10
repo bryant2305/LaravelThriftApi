@@ -9,9 +9,15 @@ class Clientes extends Model
 {
     use HasFactory;
 
-    public function servicios()
-{
-    return $this->hasMany(Servicios::class, 'cliente_id', 'id');
-}
+    // Debe coincidir con el nombre de la relación en el modelo Servicios
+    public function servicio()
+    {
+        return $this->belongsTo(Servicios::class, 'servicios_id');
+    }
+
+    public function encargado()
+    {
+        return $this->belongsTo(Encargado::class, 'encargado_id');
+    }
 
 }

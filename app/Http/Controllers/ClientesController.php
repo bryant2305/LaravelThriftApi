@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ClienteResource;
 use App\Models\Clientes;
 use Illuminate\Http\Request;
+use App\Exceptions\SomethingWentWrong;
+use App\Tools\MinioBucketTrait;
+
 
 class ClientesController extends Controller
 {
@@ -36,8 +39,14 @@ class ClientesController extends Controller
      */
     public function index()
     {
-        $clients = Clientes::all();
-        return response()->json($clients);
+        try{
+
+            $clients = Clientes::all();
+            return response()->json($clients);
+
+        }catch(\Throwable $th){
+         throw new SomethingWentWrong($th);
+        }
     }
 
    /**
@@ -80,7 +89,8 @@ class ClientesController extends Controller
  *                 type="string",
  *                 format="email",
  *                 example="john@example.com"
- *             )
+ *             ),
+ *
  *         )
  *     ),
  *     @OA\Response(
@@ -105,18 +115,27 @@ class ClientesController extends Controller
             "servicios_id"=>"required"
         ]);
 
-        $client = new Clientes();
-        $client->nombre = $request->nombre;
-        $client->servicios_id = $request->servicios_id;
-        $client->address = $request->adress;
-        $client->phone = $request->phone;
-        $client->email = $request->email;
-        $client->save();
+        try{
 
-        $data = [
-            "message" => "Client created successfully",
-            "client" => $client
-        ];
+            $client = new Clientes();
+            $client->nombre = $request->nombre;
+            $client->servicios_id = $request->servicios_id;
+            $client->address = $request->adress;
+            $client->phone = $request->phone;
+            $client->email = $request->email;
+           // $client->image_data = $request->image_data;
+            $client->save();
+
+            $data = [
+                "message" => "Client created successfully",
+                "client" => $client
+            ];
+        }catch(\Throwable $th){
+
+            throw new SomethingWentWrong($th);
+        }
+
+
 
         return response()->json($data);
     }
@@ -179,14 +198,20 @@ class ClientesController extends Controller
  */
 public function show($id)
 {
-    $client = Clientes::find($id);
+    try {
+        // Cargar la relación 'servicio' utilizando 'with'
+        $client = Clientes::with('servicio')->find($id);
 
-    if (!$client) {
-        return response()->json(["message" => "Client not found"], 404);
+        if (!$client) {
+            return response()->json(['message' => 'Client not found'], 404);
+        }
+
+        return new ClienteResource($client);
+    } catch (\Throwable $th) {
+        throw new SomethingWentWrong($th);
     }
-
-    return new ClienteResource($client);
 }
+
 
 
 /**
@@ -235,7 +260,13 @@ public function show($id)
  *                 type="string",
  *                 format="email",
  *                 example="john@example.com"
+ *             ),
+ *            @OA\Property(
+ *                 property="servicios_id",
+ *                 type="id",
+ *                 example="1"
  *             )
+ *
  *         )
  *     ),
  *     @OA\Response(
@@ -261,20 +292,25 @@ public function show($id)
 public function update(Request $request, Clientes $cliente)
 {
 
-    if (!$cliente) {
-        return response()->json(["message" => "Client not found"], 404);
-    }
-
     $request->validate([
         "nombre" => "required",
     ]);
-    $cliente->name = $request->nombre;
-    $cliente->address = $request->address;
-    $cliente->phone = $request->phone;
-    $cliente->email = $request->email;
-    $cliente->save();
+    try{
 
-    return response()->json(["message" => "Client updated successfully", "client" => $cliente]);
+        $cliente->nombre = $request->nombre;
+        $cliente->servicios_id = $request->servicios_id;
+        $cliente->address = $request->address;
+        $cliente->phone = $request->phone;
+        $cliente->email = $request->email;
+        $cliente->save();
+
+        return new ClienteResource($cliente);
+    }catch(\Throwable $th){
+
+        throw new SomethingWentWrong($th);
+    }
+
+
 }
 
 /**
@@ -310,13 +346,15 @@ public function update(Request $request, Clientes $cliente)
 public function destroy(Clientes $cliente)
 {
 
-    if (!$cliente) {
-        return response()->json(["message" => "Client not found"], 404);
+    try{
+
+        $cliente->delete();
+        return response()->json(["message" => "Client deleted successfully"]);
+    }catch(\Throwable $th){
+
+        throw new SomethingWentWrong($th);
     }
 
-    $cliente->delete();
-
-    return response()->json(["message" => "Client deleted successfully"]);
 }
 
 

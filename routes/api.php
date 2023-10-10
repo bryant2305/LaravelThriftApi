@@ -8,6 +8,8 @@ use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiciosController;
+use App\Http\Controllers\EncargadoController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,72 +24,48 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Rutas que requieren autenticación
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // Rutas de Clientes
+    Route::prefix('clientes')->group(function () {
+        Route::get('/', [ClientesController::class, 'index']);
+        Route::post('/store', [ClientesController::class, 'store']);
+        Route::get('/{cliente}/show', [ClientesController::class, 'show']);
+        Route::put('/{cliente}/update', [ClientesController::class, 'update']);
+        Route::delete('/{cliente}', [ClientesController::class, 'destroy']);
+    });
+
+    // Rutas de Servicios
+    Route::prefix('servicios')->group(function () {
+        Route::get('/', [ServiciosController::class, 'index']);
+        Route::post('/store', [ServiciosController::class, 'store']);
+        Route::get('/{servicio}/show', [ServiciosController::class, 'show']);
+        Route::put('/{servicio}/update', [ServiciosController::class, 'update']);
+        Route::delete('/{servicio}', [ServiciosController::class, 'destroy']);
+    });
+
+     // Rutas de Clientes
+     Route::prefix('encargados')->group(function () {
+        Route::get('/', [EncargadoController::class, 'index']);
+        Route::post('/store', [EncargadoController::class, 'store']);
+        Route::get('/{encargado}/show', [EncargadoController::class, 'show']);
+        Route::put('/{encargado}/update', [EncargadoController::class, 'update']);
+        Route::delete('/{encargado}', [EncargadoController::class, 'destroy']);
+    });
 });
 
-Route::get('/',function(){
-    return response()->json([
-        'message'=>'welcome to api '
-    ]);
-});
-//de esto
+// Rutas públicas
+Route::get('/', function () {
 
-// Route::get("/clients","App\Http\Controllers\ClientController@index");
-// Route::post("/clients","App\Http\Controllers\ClientController@store");
-// Route::get("/clients/{client}","App\Http\Controllers\ClientController@show");
-// Route::put("/clients/{client}","App\Http\Controllers\ClientController@update");
-// Route::delete("/clients/{client}","App\Http\Controllers\ClientController@destroy");
-
-
-// Route::get("/services","App\Http\Controllers\ServiceController@index");
-// Route::post("/services","App\Http\Controllers\ServiceController@store");
-// Route::get("/services/{service}","App\Http\Controllers\ServiceController@show");
-// Route::put("/services/{service}","App\Http\Controllers\ServiceController@update");
-// Route::delete("/services/{service}","App\Http\Controllers\ServiceController@destroy");
-
-// Route::post("/clients/service","App\Http\Controllers\ClientController@attach");
-
-// a esto
-
-//  Route::resource('clientes', ClientesController::class);
-
-// Route::resource('empleado', EmpleadoController::class);
-
-// Route::resource('services', ServiceController::class);
-
-// Route::resource('departamento', DepartamentoController::class);
-
-// Route::post('/clients/{client}/services', [ClientController::class, 'attach']);
-
-// Route::post('/departamentos/{departamento}/empleados', [DepartamentoController::class, 'attach']);
-
-// Route::resource('departamento', DepartamentoController::class);
-
-
-// Route::post('/files', [FileController::class, 'store']);
-// Route::get('/files/{id}', [FileController::class, 'show']);
-// Route::put('/files/{id}', [FileController::class, 'update']);
-// Route::delete('/files/{id}', [FileController::class, 'destroy']);
-
-Route::resource('clientes', ClientesController::class);
-
-Route::controller(ClientesController::class)->group(function () {
-
-    Route::get('/clientes', 'index');
-    Route::post('/clientes/store', 'store');
-    Route::get('/clientes/{cliente}/show', 'show');
-    Route::put('/clientes/{cliente}/update', 'update');
-    Route::delete('/api/clientes/{cliente}', 'ClientesController@destroy');
 
 });
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::controller(ServiciosController::class)->group(function () {
 
-    Route::get('/servicios', 'index');
-    Route::post('/servicios/store', 'store');
-    Route::get('/servicios/{servicio}/show', 'show');
-    Route::put('/servicios/{servicio}/update', 'update');
-    Route::delete('/api/servicios/{servicio}', 'ServiciosController@destroy');
-
-});
+// Esta ruta puede requerir autenticación, dependiendo de tus necesidades
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
