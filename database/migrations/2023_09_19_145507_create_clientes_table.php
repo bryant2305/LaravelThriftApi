@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->unsignedBigInteger('servicios_id'); // Usar el mismo tipo de datos que en la tabla 'servicios'
+            $table->unsignedBigInteger('servicios_id')->nullable(); // Usar el mismo tipo de datos que en la tabla 'servicios'
             $table->string('email');
             $table->string('address')->nullable();
             $table->string('phone')->nullable();

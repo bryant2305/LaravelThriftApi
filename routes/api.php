@@ -30,33 +30,41 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    // Rutas de Clientes
-    Route::prefix('clientes')->group(function () {
-        Route::get('/', [ClientesController::class, 'index']);
-        Route::post('/store', [ClientesController::class, 'store']);
-        Route::get('/{cliente}/show', [ClientesController::class, 'show']);
-        Route::put('/{cliente}/update', [ClientesController::class, 'update']);
-        Route::delete('/{cliente}', [ClientesController::class, 'destroy']);
-    });
 
-    // Rutas de Servicios
-    Route::prefix('servicios')->group(function () {
-        Route::get('/', [ServiciosController::class, 'index']);
-        Route::post('/store', [ServiciosController::class, 'store']);
-        Route::get('/{servicio}/show', [ServiciosController::class, 'show']);
-        Route::put('/{servicio}/update', [ServiciosController::class, 'update']);
-        Route::delete('/{servicio}', [ServiciosController::class, 'destroy']);
-    });
 
-     // Rutas de Clientes
-     Route::prefix('encargados')->group(function () {
-        Route::get('/', [EncargadoController::class, 'index']);
-        Route::post('/store', [EncargadoController::class, 'store']);
-        Route::get('/{encargado}/show', [EncargadoController::class, 'show']);
-        Route::put('/{encargado}/update', [EncargadoController::class, 'update']);
-        Route::delete('/{encargado}', [EncargadoController::class, 'destroy']);
-    });
 });
+
+// Rutas de encargados
+Route::prefix('encargados')->group(function () {
+    Route::get('/', [EncargadoController::class, 'index']);
+    Route::post('/store', [EncargadoController::class, 'store']);
+    Route::get('/{encargado}/show', [EncargadoController::class, 'show']);
+    Route::put('/{encargado}/update', [EncargadoController::class, 'update']);
+    Route::delete('/{encargado}', [EncargadoController::class, 'destroy']);
+});
+// Rutas de Clientes
+Route::prefix('clientes')->group(function () {
+    Route::get('/', [ClientesController::class, 'index']);
+    Route::post('/store', [ClientesController::class, 'store']);
+    Route::get('/{cliente}/show', [ClientesController::class, 'show']);
+    Route::put('/{cliente}/update', [ClientesController::class, 'update']);
+    Route::delete('/{cliente}', [ClientesController::class, 'destroy']);
+});
+
+// Rutas de Servicios
+Route::prefix('servicios')->group(function () {
+    Route::get('/', [ServiciosController::class, 'index']);
+    Route::post('/store', [ServiciosController::class, 'store']);
+    Route::get('/{servicio}/show', [ServiciosController::class, 'show']);
+    Route::put('/{servicio}/update', [ServiciosController::class, 'update']);
+    Route::delete('/{servicio}', [ServiciosController::class, 'destroy']);
+});
+
+
+
+
+
+
 
 // Rutas públicas
 Route::get('/', function () {

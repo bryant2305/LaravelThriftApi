@@ -7,28 +7,43 @@ use App\Models\Clientes;
 use Illuminate\Http\Request;
 use App\Exceptions\SomethingWentWrong;
 use App\Tools\MinioBucketTrait;
-
+use Illuminate\Support\Facades\Cache;
 
 class ClientesController extends Controller
 {
-   /**
-     * Display a listing of the clients.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     *
+
+    /**
      * @OA\Get(
+     *     tags={"Clients"},
      *     path="/api/clientes",
      *     summary="Get a listing of the clients",
-     *     tags={"Clients"},
+     *     @OA\Parameter(
+     *         name="nombre",
+     *         in="query",
+     *         description="Filter by client name",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="paginacion",
+     *         in="query",
+     *         description="Number of rows per page",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             @OA\Schema(
-     *              type="string",
-     *              format="string",
-     *              example="tecnologia",
-     *          )
+     *                 type="string",
+     *                 format="string",
+     *                 example="tecnologia",
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -37,15 +52,18 @@ class ClientesController extends Controller
      *     )
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        try{
+        try {
+            $nombre = $request->query('nombre');
+            $paginacion = $request->query('paginacion');
 
-            $clients = Clientes::all();
-            return response()->json($clients);
+            $clients = Clientes::nombre($nombre, $paginacion);
 
-        }catch(\Throwable $th){
-         throw new SomethingWentWrong($th);
+            return ClienteResource::collection($clients);
+        } catch (\Throwable $th) {
+            throw new SomethingWentWrong($th);
+
         }
     }
 
@@ -116,7 +134,7 @@ class ClientesController extends Controller
         ]);
 
         try{
-
+            Cache::forget('clientes_index');
             $client = new Clientes();
             $client->nombre = $request->nombre;
             $client->servicios_id = $request->servicios_id;
@@ -147,7 +165,7 @@ class ClientesController extends Controller
  * @return \Illuminate\Http\JsonResponse
  *
  * @OA\Get(
- *     path="/api/clientes/{id}",
+ *     path="/api/clientes/{id}/show",
  *     summary="Get a specific client by ID",
  *     tags={"Clients"},
  *     @OA\Parameter(
@@ -296,7 +314,7 @@ public function update(Request $request, Clientes $cliente)
         "nombre" => "required",
     ]);
     try{
-
+        Cache::forget('clientes_index');
         $cliente->nombre = $request->nombre;
         $cliente->servicios_id = $request->servicios_id;
         $cliente->address = $request->address;

@@ -16,6 +16,7 @@ class EncargadoResource extends JsonResource
     {
         return [
             "encargado"=>[
+                "id"=> $this->id,
                 "nombre"=> $this->nombre,
                  "apellido"=> $this->apellido,
                  "cliente" => $this->clientes

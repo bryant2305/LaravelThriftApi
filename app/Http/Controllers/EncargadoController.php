@@ -9,33 +9,113 @@ use App\Exceptions\SomethingWentWrong;
 
 class EncargadoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
+     /**
+     * @OA\Get(
+     *     tags={"Encargado"},
+     *     path="/api/encargados",
+     *     summary="Get a listing of the encargado",
+     *     @OA\Parameter(
+     *         name="apellido",
+     *         in="query",
+     *         description="Filter by encargado apellido",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="paginacion",
+     *         in="query",
+     *         description="Number of rows per page",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Schema(
+     *                 type="string",
+     *                 format="string",
+     *                 example="tecnologia",
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
      */
-    public function index()
+
+
+    public function index( Request $request)
     {
         try{
 
-            $encargado = Encargado::all();
-            return  response()->json($encargado);
+            $apellido = $request->query('apellido');
+            $paginacion = $request->query('paginacion');
 
+            $encargado = Encargado::apellido($apellido, $paginacion);
+
+            return  EncargadoResource::collection($encargado);
         }
         catch(\Throwable $th){
             throw new SomethingWentWrong($th);
            }
-           return new EncargadoResource($encargado);
         }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
+   /**
+ * Store a newly created client in storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\JsonResponse
+ *
+ * @OA\Post(
+ *     tags={"Encargado"},
+ *     path="/api/encargados/store",
+ *     summary="Create a new encargado",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             type="object",
+ *             required={"nombre"},
+ *             @OA\Property(
+ *                 property="nombre",
+ *                 type="string",
+ *                 example="John Doe"
+ *             ),
+ *              @OA\Property(
+ *                 property="cliente_id",
+ *                 type="id",
+ *                 example="1"
+ *             ),
+ *             @OA\Property(
+ *                 property="apellido",
+ *                 type="string",
+ *                 example="perez"
+ *             ),
+ *
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful operation",
+ *
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized"
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Unprocessable Entity"
+ *     )
+ * )
+ */
     public function store(Request $request)
     {
         $request->validate([
@@ -63,9 +143,51 @@ class EncargadoController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+      /**
+ * Display the specified client.
+ *
+ * @param  int  $id
+ * @return \Illuminate\Http\JsonResponse
+ *
+ * @OA\Get(
+ *     tags={"Encargado"},
+ *     path="/api/encargados/{id}/show",
+ *     summary="Get a specific client by ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="ID of the encargado",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful operation",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="id",
+ *                 type="integer",
+ *                 example="1"
+ *             ),
+ *             @OA\Property(
+ *                 property="nombre",
+ *                 type="string",
+ *                 example="John Doe"
+ *             ),
+ *             @OA\Property(
+ *                 property="apellido",
+ *                 type="string",
+ *                 example="perez"
+ *             ),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="encargado not found"
+ *     )
+ * )
+ */
     public function show( $id)
     {
         try {
@@ -82,19 +204,80 @@ class EncargadoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+ *
+ * @OA\Put(
+ *     path="/api/encargados/{encargado}/update",
+ *     summary="Update a client",
+ *     tags={"Encargado"},
+ *     @OA\Parameter(
+ *         name="encargado",
+ *         in="path",
+ *         description="ID of the encargado to update",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *             format="int64"
+ *         )
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             type="object",
+ *             required={"nombre"},
+ *             @OA\Property(
+ *                 property="nombre",
+ *                 type="string",
+ *                 example="John Doe"
+ *             ),
+ *             @OA\Property(
+ *                 property="apellido",
+ *                 type="string",
+ *                 example="123 Main St"
+ *             ),
+ *            @OA\Property(
+ *                 property="cliente_id",
+ *                 type="id",
+ *                 example="1"
+ *             )
+ *
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Client updated successfully"
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized"
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Unprocessable Entity"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Client not found"
+ *     )
+ * )
+ */
+    public function update(Request $request, Encargado $encargado)
     {
-        //
+
+    $request->validate([
+        "nombre" => "required",
+    ]);
+    try{
+        $encargado->nombre = $request->nombre;
+        $encargado->cliente_id = $request->cliente_id;
+        $encargado->apellido = $request->apellido;
+        $encargado->save();
+
+        return new EncargadoResource($encargado);
+    }catch(\Throwable $th){
+
+        throw new SomethingWentWrong($th);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**

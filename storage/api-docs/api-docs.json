@@ -158,8 +158,27 @@
                     "Clients"
                 ],
                 "summary": "Get a listing of the clients",
-                "description": "Display a listing of the clients.",
                 "operationId": "29593cb6d735e27309ce747b0c9fbc61",
+                "parameters": [
+                    {
+                        "name": "nombre",
+                        "in": "query",
+                        "description": "Filter by client name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "paginacion",
+                        "in": "query",
+                        "description": "Number of rows per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -235,14 +254,14 @@
                 }
             }
         },
-        "/api/clientes/{id}": {
+        "/api/clientes/{id}/show": {
             "get": {
                 "tags": [
                     "Clients"
                 ],
                 "summary": "Get a specific client by ID",
                 "description": "Display the specified client.",
-                "operationId": "5228943331d3ff73e06b36f14dab96a3",
+                "operationId": "dffdc41d3cbfa0f36ee1b009bdc635f7",
                 "parameters": [
                     {
                         "name": "id",
@@ -399,6 +418,208 @@
                 }
             }
         },
+        "/api/encargados": {
+            "get": {
+                "tags": [
+                    "Encargado"
+                ],
+                "summary": "Get a listing of the encargado",
+                "operationId": "e397d61cbb18be4bd2bc368764118882",
+                "parameters": [
+                    {
+                        "name": "apellido",
+                        "in": "query",
+                        "description": "Filter by encargado apellido",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "paginacion",
+                        "in": "query",
+                        "description": "Number of rows per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/encargados/store": {
+            "post": {
+                "tags": [
+                    "Encargado"
+                ],
+                "summary": "Create a new encargado",
+                "description": "Store a newly created client in storage.",
+                "operationId": "471776a022f331bb9e4665c7b94dc86e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "cliente_id": {
+                                        "type": "id",
+                                        "example": "1"
+                                    },
+                                    "apellido": {
+                                        "type": "string",
+                                        "example": "perez"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    }
+                }
+            }
+        },
+        "/api/encargados/{id}/show": {
+            "get": {
+                "tags": [
+                    "Encargado"
+                ],
+                "summary": "Get a specific client by ID",
+                "description": "Display the specified client.",
+                "operationId": "f08f210b40225ef3da748b54bd4dd478",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the encargado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "nombre": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "apellido": {
+                                            "type": "string",
+                                            "example": "perez"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "encargado not found"
+                    }
+                }
+            }
+        },
+        "/api/encargados/{encargado}/update": {
+            "put": {
+                "tags": [
+                    "Encargado"
+                ],
+                "summary": "Update a client",
+                "operationId": "3e1c73030f3804233441dc0c0bf1f28c",
+                "parameters": [
+                    {
+                        "name": "encargado",
+                        "in": "path",
+                        "description": "ID of the encargado to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "apellido": {
+                                        "type": "string",
+                                        "example": "123 Main St"
+                                    },
+                                    "cliente_id": {
+                                        "type": "id",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Client updated successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    },
+                    "404": {
+                        "description": "Client not found"
+                    }
+                }
+            }
+        },
         "/api/servicios": {
             "get": {
                 "tags": [
@@ -407,6 +628,26 @@
                 "summary": "Get all servicios",
                 "description": "Display a listing of the clients.",
                 "operationId": "23fd505e19d22862cb350bf22cc0894d",
+                "parameters": [
+                    {
+                        "name": "nombre",
+                        "in": "query",
+                        "description": "Filter by service name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "paginacion",
+                        "in": "query",
+                        "description": "paginacion",
+                        "required": false,
+                        "schema": {
+                            "type": "interger"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -467,14 +708,14 @@
                 }
             }
         },
-        "/api/servicios/{id}": {
+        "/api/servicios/{id}/show": {
             "get": {
                 "tags": [
                     "Services"
                 ],
                 "summary": "Get a specific service by ID",
                 "description": "Display the specified service.",
-                "operationId": "b4665be14d47eb22467cd5fd43cba9f8",
+                "operationId": "040881aa4c31874acdad579e0e125a11",
                 "parameters": [
                     {
                         "name": "id",

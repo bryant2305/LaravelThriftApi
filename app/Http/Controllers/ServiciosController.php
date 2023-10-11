@@ -15,9 +15,27 @@ class ServiciosController extends Controller
      * @return \Illuminate\Http\JsonResponse
      *
      * @OA\Get(
+     *     tags={"Services"},
      *     path="/api/servicios",
      *     summary="Get all servicios",
-     *     tags={"Services"},
+     * @OA\Parameter(
+     *         name="nombre",
+     *         in="query",
+     *         description="Filter by service name",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     * ),
+     * @OA\Parameter(
+     *         name="paginacion",
+     *         in="query",
+     *         description="paginacion",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="interger"
+     *         )
+     * ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -35,10 +53,21 @@ class ServiciosController extends Controller
      *     )
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        $servicios = Servicios::all();
-        return response()->json($servicios);
+        try{
+
+            $nombre = $request->query('nombre');
+                $paginacion = $request->query('paginacion');
+
+                $servicio = Servicios::nombre($nombre, $paginacion);
+
+                return ServiceResource::collection($servicio);
+
+        }catch (\Throwable $th) {
+            throw new SomethingWentWrong($th);
+
+        }
     }
 
  /**
@@ -123,7 +152,7 @@ class ServiciosController extends Controller
  * @return \Illuminate\Http\JsonResponse
  *
  * @OA\Get(
- *     path="/api/servicios/{id}",
+ *     path="/api/servicios/{id}/show",
  *     summary="Get a specific service by ID",
  *     tags={"Services"},
  *     @OA\Parameter(
