@@ -14,6 +14,7 @@ class RolesController extends Controller
      * @OA\Get(
      *     tags={"Roles"},
      *     path="/api/roles",
+     *     security={{"bearerAuth":{}}},
      *     summary="Get a listing of the Roles",
      *     @OA\Parameter(
      *         name="nombre",
@@ -52,19 +53,15 @@ class RolesController extends Controller
      */
     public function index(Request $request)
     {
+        auth()->user()->hasPermiso('leer');
         try {
-            $user = auth()->user();
-
-            if ($user && $user->hasPermiso('leer')) {
                 $nombre = $request->query('nombre');
                 $paginacion = $request->query('paginacion');
 
                 $roles = Role::nombre($nombre, $paginacion);
 
                 return RolesResource::collection($roles);
-            } else {
-                throw new NotPermissions();
-            }
+
         } catch (\Throwable $th) {
             throw new SomethingWentWrong($th);
         }

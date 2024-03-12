@@ -148,7 +148,6 @@ class ClientesController extends Controller
             $client->address = $request->adress;
             $client->phone = $request->phone;
             $client->email = $request->email;
-           // $client->image_data = $request->image_data;
             $client->save();
 
             $data = [
@@ -165,12 +164,8 @@ class ClientesController extends Controller
         return response()->json($data);
     }
 
-    /**
- * Display the specified client.
- *
- * @param  int  $id
- * @return \Illuminate\Http\JsonResponse
- *
+  /**
+
  * @OA\Get(
  *     path="/api/clientes/{id}/show",
  *     summary="Get a specific client by ID",
@@ -191,7 +186,7 @@ class ClientesController extends Controller
  *             @OA\Property(
  *                 property="id",
  *                 type="integer",
- *                 example="1"
+ *                 example=1
  *             ),
  *             @OA\Property(
  *                 property="nombre",
@@ -222,6 +217,7 @@ class ClientesController extends Controller
  *     )
  * )
  */
+
 public function show($id)
 {
     auth()->user()->hasPermiso('leer');

@@ -32,8 +32,6 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-
-
     // Rutas de Clientes
     Route::prefix('clientes')->group(function () {
         Route::get('/', [ClientesController::class, 'index']);
@@ -81,7 +79,7 @@ Route::prefix('servicios')->group(function () {
 
 });
 
-//PUBLICO
+
 
 
 

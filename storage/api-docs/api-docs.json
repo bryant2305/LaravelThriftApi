@@ -270,7 +270,6 @@
                     "Clients"
                 ],
                 "summary": "Get a specific client by ID",
-                "description": "Display the specified client.",
                 "operationId": "dffdc41d3cbfa0f36ee1b009bdc635f7",
                 "parameters": [
                     {
@@ -292,7 +291,7 @@
                                     "properties": {
                                         "id": {
                                             "type": "integer",
-                                            "example": "1"
+                                            "example": 1
                                         },
                                         "nombre": {
                                             "type": "string",
@@ -320,7 +319,12 @@
                     "404": {
                         "description": "Client not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/clientes/{cliente}/update": {
@@ -395,7 +399,12 @@
                     "404": {
                         "description": "Client not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/clientes/{cliente}": {
@@ -425,7 +434,12 @@
                     "404": {
                         "description": "Client not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/encargados": {
@@ -669,7 +683,12 @@
                     "401": {
                         "description": "Unauthorized"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/servicios": {
@@ -895,6 +914,49 @@
                         "description": "Service not found"
                     }
                 }
+            }
+        },
+        "/api/asignar-rol/store": {
+            "post": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Asignar un rol a un usuario",
+                "operationId": "7df61349244c60349e843f99c47c4547",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "usuario_id": {
+                                        "description": "ID del usuario",
+                                        "type": "integer",
+                                        "format": "int64"
+                                    },
+                                    "role_id": {
+                                        "description": "id del rol a asignar",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Rol asignado con éxito"
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
