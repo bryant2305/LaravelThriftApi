@@ -9,6 +9,7 @@ use App\Exceptions\SomethingWentWrong;
 
 class EncargadoController extends Controller
 {
+
      /**
      * @OA\Get(
      *     tags={"Encargado"},
@@ -54,6 +55,7 @@ class EncargadoController extends Controller
     public function index( Request $request)
     {
         try{
+            auth()->user()->hasPermiso('leer');
 
             $apellido = $request->query('apellido');
             $paginacion = $request->query('paginacion');
@@ -118,6 +120,9 @@ class EncargadoController extends Controller
  */
     public function store(Request $request)
     {
+
+        auth()->user()->hasPermiso('crear');
+
         $request->validate([
             "nombre" => "required",
             "apellido"=>'required',
@@ -190,6 +195,8 @@ class EncargadoController extends Controller
  */
     public function show( $id)
     {
+        auth()->user()->hasPermiso('leer');
+
         try {
             $encargado = Encargado::find($id);
 
@@ -263,16 +270,20 @@ class EncargadoController extends Controller
     public function update(Request $request, Encargado $encargado)
     {
 
-    $request->validate([
+        auth()->user()->hasPermiso('editar');
+
+        $request->validate([
         "nombre" => "required",
-    ]);
-    try{
+       ]);
+
+       try{
         $encargado->nombre = $request->nombre;
         $encargado->cliente_id = $request->cliente_id;
         $encargado->apellido = $request->apellido;
         $encargado->save();
 
         return new EncargadoResource($encargado);
+        
     }catch(\Throwable $th){
 
         throw new SomethingWentWrong($th);

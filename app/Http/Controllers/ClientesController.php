@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ClientesController extends Controller
 {
+    public const MODULO = 'clientes';
 
     /**
      * @OA\Get(
@@ -54,6 +55,8 @@ class ClientesController extends Controller
      */
     public function index(Request $request)
     {
+        auth()->user()->hasPermiso('leer');
+
         try {
             $nombre = $request->query('nombre');
             $paginacion = $request->query('paginacion');
@@ -128,6 +131,8 @@ class ClientesController extends Controller
  */
     public function store(Request $request)
     {
+        auth()->user()->hasPermiso('crear');
+
         $request->validate([
             "nombre" => "required",
             "servicios_id"=>"required"
@@ -216,6 +221,8 @@ class ClientesController extends Controller
  */
 public function show($id)
 {
+    auth()->user()->hasPermiso('leer');
+
     try {
         // Cargar la relación 'servicio' utilizando 'with'
         $client = Clientes::with('servicio')->find($id);
@@ -310,6 +317,8 @@ public function show($id)
 public function update(Request $request, Clientes $cliente)
 {
 
+    auth()->user()->hasPermiso('editar');
+
     $request->validate([
         "nombre" => "required",
     ]);
@@ -363,9 +372,9 @@ public function update(Request $request, Clientes $cliente)
  */
 public function destroy(Clientes $cliente)
 {
+    auth()->user()->hasPermiso('borrar');
 
     try{
-
         $cliente->delete();
         return response()->json(["message" => "Client deleted successfully"]);
     }catch(\Throwable $th){

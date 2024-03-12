@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Exceptions\NotPermissions;
 
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    
+
 
     /**
      * The attributes that are mass assignable.
@@ -44,5 +45,35 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_users', 'user_id', 'role_id');
+    }
+
+
+    public function hasPermiso($permiso)
+    {
+        $user = auth()->user();
+
+        if ($user) {
+            $roles = $user->roles;
+
+            foreach ($roles as $role) {
+                $permisos = $role->permisos;
+
+                foreach ($permisos as $item) {
+                    if ($item->nombre == $permiso) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        throw new NotPermissions();
+    }
+
+
 
 }
