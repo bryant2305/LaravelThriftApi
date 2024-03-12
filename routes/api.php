@@ -61,14 +61,6 @@ Route::prefix('roles')->group(function () {
     Route::delete('/{role}', [RolesController::class, 'destroy']);
 });
 
-
-});
-
-//PUBLICO
-
-
-
-
 // Rutas de encargados
 Route::prefix('encargados')->group(function () {
     Route::get('/', [EncargadoController::class, 'index']);
@@ -86,6 +78,14 @@ Route::prefix('servicios')->group(function () {
     Route::put('/{servicio}/update', [ServiciosController::class, 'update']);
     Route::delete('/{servicio}', [ServiciosController::class, 'destroy']);
 });
+
+});
+
+//PUBLICO
+
+
+
+
 
 
 

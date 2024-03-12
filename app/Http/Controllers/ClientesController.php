@@ -17,6 +17,7 @@ class ClientesController extends Controller
      * @OA\Get(
      *     tags={"Clients"},
      *     path="/api/clientes",
+     *     security={{"bearerAuth":{}}},
      *     summary="Get a listing of the clients",
      *     @OA\Parameter(
      *         name="nombre",
@@ -79,6 +80,7 @@ class ClientesController extends Controller
  * @OA\Post(
  *     path="/api/clientes/store",
  *     summary="Create a new client",
+ *     security={{"bearerAuth":{}}},
  *     tags={"Clients"},
  *     @OA\RequestBody(
  *         required=true,
@@ -172,6 +174,7 @@ class ClientesController extends Controller
  * @OA\Get(
  *     path="/api/clientes/{id}/show",
  *     summary="Get a specific client by ID",
+ *     security={{"bearerAuth":{}}},
  *     tags={"Clients"},
  *     @OA\Parameter(
  *         name="id",
@@ -249,6 +252,7 @@ public function show($id)
  * @OA\Put(
  *     path="/api/clientes/{cliente}/update",
  *     summary="Update a client",
+ *     security={{"bearerAuth":{}}},
  *     tags={"Clients"},
  *     @OA\Parameter(
  *         name="cliente",
@@ -349,6 +353,7 @@ public function update(Request $request, Clientes $cliente)
  * @OA\Delete(
  *     path="/api/clientes/{cliente}",
  *     summary="Delete a client",
+ *     security={{"bearerAuth":{}}},
  *     tags={"Clients"},
  *     @OA\Parameter(
  *         name="cliente",

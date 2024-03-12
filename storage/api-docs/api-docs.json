@@ -191,7 +191,12 @@
                     "401": {
                         "description": "Unauthorized"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/clientes/store": {
@@ -251,7 +256,12 @@
                     "422": {
                         "description": "Unprocessable Entity"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/clientes/{id}/show": {
