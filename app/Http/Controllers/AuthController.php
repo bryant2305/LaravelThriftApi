@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\HasApiTokens;
-
+use App\Http\Resources\UserResource;
 /**
  * @group Authentication
  *
@@ -81,8 +81,8 @@ class AuthController extends Controller
  *         required=true,
  *         @OA\JsonContent(
  *             required={"email", "password"},
- *             @OA\Property(property="email", type="string", format="email", example="usuario@example.com"),
- *             @OA\Property(property="password", type="string", format="password", example="contraseña")
+ *             @OA\Property(property="email", type="string", format="email", example="pruebaAdmin@pruebas.com"),
+ *             @OA\Property(property="password", type="string", format="password", example="admin")
  *         )
  *     ),
  *     @OA\Response(
@@ -103,18 +103,23 @@ class AuthController extends Controller
  */
 
 
-public function login(Request $request)
-{
-    $credentials = $request->only('email', 'password');
+ public function login(Request $request)
+ {
+     $credentials = $request->only('email', 'password');
 
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
-        $token = $user->createToken('MyAppToken')->plainTextToken;
-        return response()->json(['token' => $token], 200);
-    } else {
-        return response()->json(['message' => 'Credenciales inválidas'], 401);
-    }
-}
+     if (Auth::attempt($credentials)) {
+         $user = Auth::user();
+         $token = $user->createToken('MyAppToken')->plainTextToken;
+
+         // Devolver el recurso UserResource junto con el token
+         return response()->json([
+             'user' => new UserResource($user),
+             'token' => $token
+         ], 200);
+     } else {
+         return response()->json(['message' => 'Credenciales inválidas'], 401);
+     }
+ }
 
 
     /**

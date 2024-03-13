@@ -103,12 +103,12 @@
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "usuario@example.com"
+                                        "example": "pruebaAdmin@pruebas.com"
                                     },
                                     "password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "contraseña"
+                                        "example": "admin"
                                     }
                                 },
                                 "type": "object"

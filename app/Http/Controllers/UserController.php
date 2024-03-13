@@ -104,8 +104,8 @@ class UserController extends Controller
 
 public function index(Request $request)
 {
+    auth()->user()->hasPermiso('leer');
     try {
-        auth()->user()->hasPermiso('asignar_rol');
 
         $name = $request->query('name');
         $paginacion = $request->query('paginacion');
