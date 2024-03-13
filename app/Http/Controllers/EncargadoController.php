@@ -14,6 +14,7 @@ class EncargadoController extends Controller
      * @OA\Get(
      *     tags={"Encargado"},
      *     path="/api/encargados",
+     *     security={{"bearerAuth":{}}},
      *     summary="Get a listing of the encargado",
      *     @OA\Parameter(
      *         name="apellido",
@@ -79,6 +80,7 @@ class EncargadoController extends Controller
  * @OA\Post(
  *     tags={"Encargado"},
  *     path="/api/encargados/store",
+ *     security={{"bearerAuth":{}}},
  *     summary="Create a new encargado",
  *     @OA\RequestBody(
  *         required=true,
@@ -89,11 +91,6 @@ class EncargadoController extends Controller
  *                 property="nombre",
  *                 type="string",
  *                 example="John Doe"
- *             ),
- *              @OA\Property(
- *                 property="cliente_id",
- *                 type="id",
- *                 example="1"
  *             ),
  *             @OA\Property(
  *                 property="apellido",
@@ -134,7 +131,6 @@ class EncargadoController extends Controller
             $encargado = new Encargado();
             $encargado->nombre = $request->nombre;
             $encargado -> apellido = $request->apellido;
-            $encargado->cliente_id = $request->cliente_id;
             $encargado->save();
 
             $data = [
@@ -157,6 +153,7 @@ class EncargadoController extends Controller
  * @OA\Get(
  *     tags={"Encargado"},
  *     path="/api/encargados/{id}/show",
+ *     security={{"bearerAuth":{}}},
  *     summary="Get a specific client by ID",
  *     @OA\Parameter(
  *         name="id",
@@ -214,6 +211,7 @@ class EncargadoController extends Controller
  *
  * @OA\Put(
  *     path="/api/encargados/{encargado}/update",
+ *     security={{"bearerAuth":{}}},
  *     summary="Update a client",
  *     tags={"Encargado"},
  *     @OA\Parameter(
@@ -241,11 +239,6 @@ class EncargadoController extends Controller
  *                 type="string",
  *                 example="123 Main St"
  *             ),
- *            @OA\Property(
- *                 property="cliente_id",
- *                 type="id",
- *                 example="1"
- *             )
  *
  *         )
  *     ),
@@ -278,12 +271,11 @@ class EncargadoController extends Controller
 
        try{
         $encargado->nombre = $request->nombre;
-        $encargado->cliente_id = $request->cliente_id;
         $encargado->apellido = $request->apellido;
         $encargado->save();
 
         return new EncargadoResource($encargado);
-        
+
     }catch(\Throwable $th){
 
         throw new SomethingWentWrong($th);

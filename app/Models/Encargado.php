@@ -15,7 +15,11 @@ class Encargado extends Model
             $query->where('apellido', 'like', '%' . $apellido . '%');
         }
 
-        return $query->paginate($paginacion ?? env('PAGINAR'));
+        if ($paginacion !== null) {
+            return $query->paginate($paginacion);
+        }
+
+        return $query->get();
     }
 
     public function clientes()

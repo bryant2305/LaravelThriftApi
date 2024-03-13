@@ -17,6 +17,7 @@ class ServiciosController extends Controller
      * @OA\Get(
      *     tags={"Services"},
      *     path="/api/servicios",
+     *     security={{"bearerAuth":{}}},
      *     summary="Get all servicios",
      * @OA\Parameter(
      *         name="nombre",
@@ -80,6 +81,7 @@ class ServiciosController extends Controller
  *
  * @OA\Post(
  *     path="/api/servicios/store",
+ *     security={{"bearerAuth":{}}},
  *     summary="Create a new service",
  *     tags={"Services"},
  *     @OA\RequestBody(
@@ -149,6 +151,7 @@ class ServiciosController extends Controller
  *
  * @OA\Get(
  *     path="/api/servicios/{id}/show",
+ *     security={{"bearerAuth":{}}},
  *     summary="Get a specific service by ID",
  *     tags={"Services"},
  *     @OA\Parameter(
@@ -218,6 +221,7 @@ class ServiciosController extends Controller
  *
  * @OA\Put(
  *     path="/api/servicios/{servicio}/update",
+ *     security={{"bearerAuth":{}}},
  *     summary="update a new service",
  *     tags={"Services"},
  *
@@ -294,6 +298,7 @@ public function update(Request $request, Servicios $servicio)
  *
  * @OA\Delete(
  *     path="/api/servicios/{servicio}",
+ *     security={{"bearerAuth":{}}},
  *     summary="Delete a service",
  *     tags={"Services"},
  *     @OA\Parameter(

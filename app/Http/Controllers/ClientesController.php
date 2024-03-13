@@ -97,6 +97,11 @@ class ClientesController extends Controller
  *                 type="id",
  *                 example="1"
  *             ),
+ *              @OA\Property(
+ *                 property="encargado_id",
+ *                 type="id",
+ *                 example="1"
+ *             ),
  *             @OA\Property(
  *                 property="address",
  *                 type="string",
@@ -145,6 +150,7 @@ class ClientesController extends Controller
             $client = new Clientes();
             $client->nombre = $request->nombre;
             $client->servicios_id = $request->servicios_id;
+            $client->encargado_id = $request->encargado_id;
             $client->address = $request->adress;
             $client->phone = $request->phone;
             $client->email = $request->email;
@@ -237,7 +243,6 @@ public function show($id)
 }
 
 
-
 /**
  * Update the specified client in storage.
  *
@@ -264,7 +269,7 @@ public function show($id)
  *         required=true,
  *         @OA\JsonContent(
  *             type="object",
- *             required={"nombre", "address", "phone", "email"},
+ *             required={"nombre", "address", "phone", "email", "servicios_id", "encargado_id"},
  *             @OA\Property(
  *                 property="nombre",
  *                 type="string",
@@ -286,12 +291,16 @@ public function show($id)
  *                 format="email",
  *                 example="john@example.com"
  *             ),
- *            @OA\Property(
+ *             @OA\Property(
  *                 property="servicios_id",
- *                 type="id",
- *                 example="1"
+ *                 type="integer",
+ *                 example=1
+ *             ),
+ *             @OA\Property(
+ *                 property="encargado_id",
+ *                 type="integer",
+ *                 example=1
  *             )
- *
  *         )
  *     ),
  *     @OA\Response(
@@ -314,6 +323,7 @@ public function show($id)
  */
 
 
+
 public function update(Request $request, Clientes $cliente)
 {
 
@@ -326,6 +336,7 @@ public function update(Request $request, Clientes $cliente)
         Cache::forget('clientes_index');
         $cliente->nombre = $request->nombre;
         $cliente->servicios_id = $request->servicios_id;
+        $client->encargado_id = $request->encargado_id;
         $cliente->address = $request->address;
         $cliente->phone = $request->phone;
         $cliente->email = $request->email;

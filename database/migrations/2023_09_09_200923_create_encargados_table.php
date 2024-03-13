@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('apellido');
-            $table->unsignedBigInteger('cliente_id');
-            $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->unsignedBigInteger('cliente_id')->nullable();
+            // $table->foreign('cliente_id')->references('id')->on('clientes');
             $table->timestamps();
         });
     }
- 
+
     /**
      * Reverse the migrations.
      */

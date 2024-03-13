@@ -23,6 +23,7 @@ return new class extends Migration
 
             // Definir la restricción de clave externa
             $table->foreign('servicios_id')->references('id')->on('servicios');
+            $table->foreign('encargado_id')->references('id')->on('encargados');
         });
     }
 

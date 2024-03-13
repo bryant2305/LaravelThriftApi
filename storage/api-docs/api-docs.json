@@ -227,6 +227,10 @@
                                         "type": "id",
                                         "example": "1"
                                     },
+                                    "encargado_id": {
+                                        "type": "id",
+                                        "example": "1"
+                                    },
                                     "address": {
                                         "type": "string",
                                         "example": "123 Main St"
@@ -356,7 +360,9 @@
                                     "nombre",
                                     "address",
                                     "phone",
-                                    "email"
+                                    "email",
+                                    "servicios_id",
+                                    "encargado_id"
                                 ],
                                 "properties": {
                                     "nombre": {
@@ -377,8 +383,12 @@
                                         "example": "john@example.com"
                                     },
                                     "servicios_id": {
-                                        "type": "id",
-                                        "example": "1"
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "encargado_id": {
+                                        "type": "integer",
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"
@@ -481,7 +491,12 @@
                     "401": {
                         "description": "Unauthorized"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/encargados/store": {
@@ -505,10 +520,6 @@
                                         "type": "string",
                                         "example": "John Doe"
                                     },
-                                    "cliente_id": {
-                                        "type": "id",
-                                        "example": "1"
-                                    },
                                     "apellido": {
                                         "type": "string",
                                         "example": "perez"
@@ -529,7 +540,12 @@
                     "422": {
                         "description": "Unprocessable Entity"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/encargados/{id}/show": {
@@ -579,7 +595,12 @@
                     "404": {
                         "description": "encargado not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/encargados/{encargado}/update": {
@@ -617,10 +638,6 @@
                                     "apellido": {
                                         "type": "string",
                                         "example": "123 Main St"
-                                    },
-                                    "cliente_id": {
-                                        "type": "id",
-                                        "example": "1"
                                     }
                                 },
                                 "type": "object"
@@ -641,7 +658,12 @@
                     "404": {
                         "description": "Client not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/roles": {
@@ -731,7 +753,12 @@
                     "401": {
                         "description": "Unauthorized"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/servicios/store": {
@@ -776,7 +803,12 @@
                     "422": {
                         "description": "Unprocessable Entity"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/servicios/{id}/show": {
@@ -826,7 +858,12 @@
                     "404": {
                         "description": "Client not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/servicios/{servicio}/update": {
@@ -883,7 +920,12 @@
                     "422": {
                         "description": "Unprocessable Entity"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/servicios/{servicio}": {
@@ -913,7 +955,12 @@
                     "404": {
                         "description": "Service not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/asignar-rol/store": {
