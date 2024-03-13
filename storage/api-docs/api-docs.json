@@ -1015,7 +1015,7 @@
                 "operationId": "c457726701591d1183b53aa71fc13441",
                 "parameters": [
                     {
-                        "name": "nombre",
+                        "name": "name",
                         "in": "query",
                         "description": "Filter by users name",
                         "required": false,

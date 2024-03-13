@@ -16,7 +16,7 @@ class UserController extends Controller
 /**
  * @OA\Post(
  *     path="/api/users/asignar-rol",
- *     summary="Asignar un rol a un usuario",
+ *     summary="Assign a role to a user ",
  *     security={{"bearerAuth":{}}},
  *     tags={"Users"},
  *     @OA\RequestBody(
@@ -66,7 +66,7 @@ class UserController extends Controller
      *     security={{"bearerAuth":{}}},
      *     summary="Get a listing of the users",
      *     @OA\Parameter(
-     *         name="nombre",
+     *         name="name",
      *         in="query",
      *         description="Filter by users name",
      *         required=false,

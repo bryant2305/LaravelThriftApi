@@ -336,7 +336,7 @@ public function update(Request $request, Clientes $cliente)
         Cache::forget('clientes_index');
         $cliente->nombre = $request->nombre;
         $cliente->servicios_id = $request->servicios_id;
-        $client->encargado_id = $request->encargado_id;
+        $cliente->encargado_id = $request->encargado_id;
         $cliente->address = $request->address;
         $cliente->phone = $request->phone;
         $cliente->email = $request->email;

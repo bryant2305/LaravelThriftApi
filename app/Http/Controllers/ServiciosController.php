@@ -202,15 +202,13 @@ class ServiciosController extends Controller
                  return response()->json("error , no se encontro ningun servicio");
             }
 
+            return new ServiceResource($servicios);
+
         }catch(\Throwable $th){
 
             throw new SomethingWentWrong($th);
 
         }
-
-
-
-        return ServiceResource::collection($servicio);
     }
 
     /**
@@ -282,12 +280,12 @@ public function update(Request $request, Servicios $servicio)
         $servicio->precio = $request->precio;
         $servicio->save();
 
+        return new  ServiceResource($servicio);
 
     }catch (\Throwable $th) {
         throw new SomethingWentWrong($th);
     }
 
-    return ServiceResource::collection($servicio);
 }
 
     /**
