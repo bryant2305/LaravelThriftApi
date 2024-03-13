@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use App\Http\Resources\UserResource;
 
 use App\Exceptions\SomethingWentWrong;
 
@@ -14,10 +15,10 @@ class UserController extends Controller
 
 /**
  * @OA\Post(
- *     path="/api/asignar-rol/store",
+ *     path="/api/users/asignar-rol",
  *     summary="Asignar un rol a un usuario",
  *     security={{"bearerAuth":{}}},
- *     tags={"Usuarios"},
+ *     tags={"Users"},
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
@@ -57,4 +58,64 @@ class UserController extends Controller
          throw new SomethingWentWrong($th);
      }
  }
+
+ /**
+     * @OA\Get(
+     *     tags={"Users"},
+     *     path="/api/users",
+     *     security={{"bearerAuth":{}}},
+     *     summary="Get a listing of the users",
+     *     @OA\Parameter(
+     *         name="nombre",
+     *         in="query",
+     *         description="Filter by users name",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="paginacion",
+     *         in="query",
+     *         description="Number of rows per page",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Schema(
+     *                 type="string",
+     *                 format="string",
+     *                 example="tecnologia",
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
+
+
+public function index(Request $request)
+{
+    try {
+        auth()->user()->hasPermiso('asignar_rol');
+
+        $name = $request->query('name');
+        $paginacion = $request->query('paginacion');
+        $users = User::name($name, $paginacion);
+
+        return UserResource::collection($users);
+    } catch (\Throwable $th) {
+        throw new SomethingWentWrong($th);
+    }
+}
+
+
 }

@@ -52,6 +52,14 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'role_users', 'user_id', 'role_id');
     }
 
+    public function scopeName($query, $name = null, $paginacion = null)
+    {
+        if (!empty($name)) {
+            $query->where('name', 'like', '%' . $name . '%');
+        }
+
+        return $query->paginate($paginacion ?? env('PAGINAR'));
+    }
 
     public function hasPermiso($permiso)
     {

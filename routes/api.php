@@ -42,9 +42,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
    // Rutas de asignarRole
-Route::prefix('asignar-rol')->group(function () {
+Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
-    Route::post('/store', [UserController::class, 'asignarRol']);
+    Route::post('/asignar-rol', [UserController::class, 'asignarRol']);
     Route::get('/{User}/show', [UserController::class, 'show']);
     Route::put('/{User}/update', [UserController::class, 'update']);
     Route::delete('/{User}', [UserController::class, 'destroy']);

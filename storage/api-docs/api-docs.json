@@ -963,13 +963,13 @@
                 ]
             }
         },
-        "/api/asignar-rol/store": {
+        "/api/users/asignar-rol": {
             "post": {
                 "tags": [
-                    "Usuarios"
+                    "Users"
                 ],
                 "summary": "Asignar un rol a un usuario",
-                "operationId": "7df61349244c60349e843f99c47c4547",
+                "operationId": "96ac70f9011827ebb5dd07e9d461010b",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -997,6 +997,53 @@
                     },
                     "404": {
                         "description": "Usuario no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a listing of the users",
+                "operationId": "c457726701591d1183b53aa71fc13441",
+                "parameters": [
+                    {
+                        "name": "nombre",
+                        "in": "query",
+                        "description": "Filter by users name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "paginacion",
+                        "in": "query",
+                        "description": "Number of rows per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [
