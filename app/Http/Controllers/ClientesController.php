@@ -11,11 +11,13 @@ use Illuminate\Support\Facades\Cache;
 
 class ClientesController extends Controller
 {
+    public const MODULO = 'clientes';
 
     /**
      * @OA\Get(
      *     tags={"Clients"},
      *     path="/api/clientes",
+     *     security={{"bearerAuth":{}}},
      *     summary="Get a listing of the clients",
      *     @OA\Parameter(
      *         name="nombre",
@@ -54,6 +56,8 @@ class ClientesController extends Controller
      */
     public function index(Request $request)
     {
+        auth()->user()->hasPermiso('leer');
+
         try {
             $nombre = $request->query('nombre');
             $paginacion = $request->query('paginacion');
@@ -76,6 +80,7 @@ class ClientesController extends Controller
  * @OA\Post(
  *     path="/api/clientes/store",
  *     summary="Create a new client",
+ *     security={{"bearerAuth":{}}},
  *     tags={"Clients"},
  *     @OA\RequestBody(
  *         required=true,
@@ -89,6 +94,11 @@ class ClientesController extends Controller
  *             ),
  *              @OA\Property(
  *                 property="servicios_id",
+ *                 type="id",
+ *                 example="1"
+ *             ),
+ *              @OA\Property(
+ *                 property="encargado_id",
  *                 type="id",
  *                 example="1"
  *             ),
@@ -128,6 +138,8 @@ class ClientesController extends Controller
  */
     public function store(Request $request)
     {
+        auth()->user()->hasPermiso('crear');
+
         $request->validate([
             "nombre" => "required",
             "servicios_id"=>"required"
@@ -138,10 +150,10 @@ class ClientesController extends Controller
             $client = new Clientes();
             $client->nombre = $request->nombre;
             $client->servicios_id = $request->servicios_id;
+            $client->encargado_id = $request->encargado_id;
             $client->address = $request->adress;
             $client->phone = $request->phone;
             $client->email = $request->email;
-           // $client->image_data = $request->image_data;
             $client->save();
 
             $data = [
@@ -158,15 +170,12 @@ class ClientesController extends Controller
         return response()->json($data);
     }
 
-    /**
- * Display the specified client.
- *
- * @param  int  $id
- * @return \Illuminate\Http\JsonResponse
- *
+  /**
+
  * @OA\Get(
  *     path="/api/clientes/{id}/show",
  *     summary="Get a specific client by ID",
+ *     security={{"bearerAuth":{}}},
  *     tags={"Clients"},
  *     @OA\Parameter(
  *         name="id",
@@ -183,7 +192,7 @@ class ClientesController extends Controller
  *             @OA\Property(
  *                 property="id",
  *                 type="integer",
- *                 example="1"
+ *                 example=1
  *             ),
  *             @OA\Property(
  *                 property="nombre",
@@ -214,8 +223,11 @@ class ClientesController extends Controller
  *     )
  * )
  */
+
 public function show($id)
 {
+    auth()->user()->hasPermiso('leer');
+
     try {
         // Cargar la relación 'servicio' utilizando 'with'
         $client = Clientes::with('servicio')->find($id);
@@ -231,7 +243,6 @@ public function show($id)
 }
 
 
-
 /**
  * Update the specified client in storage.
  *
@@ -242,6 +253,7 @@ public function show($id)
  * @OA\Put(
  *     path="/api/clientes/{cliente}/update",
  *     summary="Update a client",
+ *     security={{"bearerAuth":{}}},
  *     tags={"Clients"},
  *     @OA\Parameter(
  *         name="cliente",
@@ -257,7 +269,7 @@ public function show($id)
  *         required=true,
  *         @OA\JsonContent(
  *             type="object",
- *             required={"nombre", "address", "phone", "email"},
+ *             required={"nombre", "address", "phone", "email", "servicios_id", "encargado_id"},
  *             @OA\Property(
  *                 property="nombre",
  *                 type="string",
@@ -279,12 +291,16 @@ public function show($id)
  *                 format="email",
  *                 example="john@example.com"
  *             ),
- *            @OA\Property(
+ *             @OA\Property(
  *                 property="servicios_id",
- *                 type="id",
- *                 example="1"
+ *                 type="integer",
+ *                 example=1
+ *             ),
+ *             @OA\Property(
+ *                 property="encargado_id",
+ *                 type="integer",
+ *                 example=1
  *             )
- *
  *         )
  *     ),
  *     @OA\Response(
@@ -307,8 +323,11 @@ public function show($id)
  */
 
 
+
 public function update(Request $request, Clientes $cliente)
 {
+
+    auth()->user()->hasPermiso('editar');
 
     $request->validate([
         "nombre" => "required",
@@ -317,6 +336,7 @@ public function update(Request $request, Clientes $cliente)
         Cache::forget('clientes_index');
         $cliente->nombre = $request->nombre;
         $cliente->servicios_id = $request->servicios_id;
+        $cliente->encargado_id = $request->encargado_id;
         $cliente->address = $request->address;
         $cliente->phone = $request->phone;
         $cliente->email = $request->email;
@@ -340,6 +360,7 @@ public function update(Request $request, Clientes $cliente)
  * @OA\Delete(
  *     path="/api/clientes/{cliente}",
  *     summary="Delete a client",
+ *     security={{"bearerAuth":{}}},
  *     tags={"Clients"},
  *     @OA\Parameter(
  *         name="cliente",
@@ -363,9 +384,9 @@ public function update(Request $request, Clientes $cliente)
  */
 public function destroy(Clientes $cliente)
 {
+    auth()->user()->hasPermiso('borrar');
 
     try{
-
         $cliente->delete();
         return response()->json(["message" => "Client deleted successfully"]);
     }catch(\Throwable $th){

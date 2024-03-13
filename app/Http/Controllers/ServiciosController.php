@@ -17,6 +17,7 @@ class ServiciosController extends Controller
      * @OA\Get(
      *     tags={"Services"},
      *     path="/api/servicios",
+     *     security={{"bearerAuth":{}}},
      *     summary="Get all servicios",
      * @OA\Parameter(
      *         name="nombre",
@@ -55,9 +56,11 @@ class ServiciosController extends Controller
      */
     public function index(Request $request)
     {
-        try{
+        $user = auth()->user();
 
-            $nombre = $request->query('nombre');
+        try{
+            if ($user && $user->hasPermiso('leer'))
+               /// $nombre = $request->query('nombre');
                 $paginacion = $request->query('paginacion');
 
                 $servicio = Servicios::nombre($nombre, $paginacion);
@@ -78,6 +81,7 @@ class ServiciosController extends Controller
  *
  * @OA\Post(
  *     path="/api/servicios/store",
+ *     security={{"bearerAuth":{}}},
  *     summary="Create a new service",
  *     tags={"Services"},
  *     @OA\RequestBody(
@@ -116,31 +120,25 @@ class ServiciosController extends Controller
 
     public function store(Request $request)
     {
+
+        auth()->user()->hasPermiso('crear');
+
+
        $request->validate([
         "nombre" => "required"
        ]);
 
-       if(!empty($request->imagen)){
-        $image = $this->upload($request, 'imagen');
-    }
+       try{
 
-       $servicios = new Servicios();
-       $servicios -> nombre = $request ->nombre;
-       $servicios -> precio = $request ->precio;
-       if(!empty($request->imagen)){
-        $oferente->image_name = $image['name'];
-        $oferente->image_url = $image['url'];
-        $oferente->image_ext = $image['ext'];
-        $oferente->image_size = $image['size'];
-    }
-       $servicios ->save();
+           $servicios = new Servicios();
+           $servicios -> nombre = $request ->nombre;
+           $servicios -> precio = $request ->precio;
+           $servicios ->save();
 
-       $data = [
-        "message" => "Service created successfully",
-        "service" => $servicios
-    ];
+       }catch(\Throwable $th){
 
-    return response()->json($data);
+        throw new SomethingWentWrong($th);
+       }
 
 
     }
@@ -153,6 +151,7 @@ class ServiciosController extends Controller
  *
  * @OA\Get(
  *     path="/api/servicios/{id}/show",
+ *     security={{"bearerAuth":{}}},
  *     summary="Get a specific service by ID",
  *     tags={"Services"},
  *     @OA\Parameter(
@@ -193,13 +192,23 @@ class ServiciosController extends Controller
  */
     public function show( int $id)
     {
-        $servicios = Servicios::find($id);
 
-        if ($servicios == null){
-             return response()->json("error , no se encontro ningun servicio");
+        auth()->user()->hasPermiso('leer');
+
+        try{
+            $servicios = Servicios::find($id);
+
+            if ($servicios == null){
+                 return response()->json("error , no se encontro ningun servicio");
+            }
+
+            return new ServiceResource($servicios);
+
+        }catch(\Throwable $th){
+
+            throw new SomethingWentWrong($th);
+
         }
-
-        return new ServiceResource($servicios);
     }
 
     /**
@@ -210,6 +219,7 @@ class ServiciosController extends Controller
  *
  * @OA\Put(
  *     path="/api/servicios/{servicio}/update",
+ *     security={{"bearerAuth":{}}},
  *     summary="update a new service",
  *     tags={"Services"},
  *
@@ -258,20 +268,24 @@ class ServiciosController extends Controller
  */
 public function update(Request $request, Servicios $servicio)
 {
-    if (!$servicio) {
-        return response()->json(["message" => "Service not found"], 404);
+
+    auth()->user()->hasPermiso('editar');
+
+    try{
+        if (!$servicio) {
+            return response()->json(["message" => "Service not found"], 404);
+        }
+
+        $servicio->nombre = $request->nombre;
+        $servicio->precio = $request->precio;
+        $servicio->save();
+
+        return new  ServiceResource($servicio);
+
+    }catch (\Throwable $th) {
+        throw new SomethingWentWrong($th);
     }
 
-    $servicio->nombre = $request->nombre;
-    $servicio->precio = $request->precio;
-    $servicio->save();
-
-    $data = [
-        "message" => "Service updated successfully",
-        "service" => $servicio
-    ];
-
-    return response()->json($data);
 }
 
     /**
@@ -282,6 +296,7 @@ public function update(Request $request, Servicios $servicio)
  *
  * @OA\Delete(
  *     path="/api/servicios/{servicio}",
+ *     security={{"bearerAuth":{}}},
  *     summary="Delete a service",
  *     tags={"Services"},
  *     @OA\Parameter(
@@ -306,6 +321,8 @@ public function update(Request $request, Servicios $servicio)
  */
 public function destroy(Servicios $servicio)
 {
+    auth()->user()->hasPermiso('borrar');
+
     try {
         $servicio->delete();
         return response()->json('Service deleted successfully');

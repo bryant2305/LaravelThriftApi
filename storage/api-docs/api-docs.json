@@ -103,12 +103,12 @@
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "usuario@example.com"
+                                        "example": "pruebaAdmin@pruebas.com"
                                     },
                                     "password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "contraseña"
+                                        "example": "admin"
                                     }
                                 },
                                 "type": "object"
@@ -191,7 +191,12 @@
                     "401": {
                         "description": "Unauthorized"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/clientes/store": {
@@ -219,6 +224,10 @@
                                         "example": "John Doe"
                                     },
                                     "servicios_id": {
+                                        "type": "id",
+                                        "example": "1"
+                                    },
+                                    "encargado_id": {
                                         "type": "id",
                                         "example": "1"
                                     },
@@ -251,7 +260,12 @@
                     "422": {
                         "description": "Unprocessable Entity"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/clientes/{id}/show": {
@@ -260,7 +274,6 @@
                     "Clients"
                 ],
                 "summary": "Get a specific client by ID",
-                "description": "Display the specified client.",
                 "operationId": "dffdc41d3cbfa0f36ee1b009bdc635f7",
                 "parameters": [
                     {
@@ -282,7 +295,7 @@
                                     "properties": {
                                         "id": {
                                             "type": "integer",
-                                            "example": "1"
+                                            "example": 1
                                         },
                                         "nombre": {
                                             "type": "string",
@@ -310,7 +323,12 @@
                     "404": {
                         "description": "Client not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/clientes/{cliente}/update": {
@@ -342,7 +360,9 @@
                                     "nombre",
                                     "address",
                                     "phone",
-                                    "email"
+                                    "email",
+                                    "servicios_id",
+                                    "encargado_id"
                                 ],
                                 "properties": {
                                     "nombre": {
@@ -363,8 +383,12 @@
                                         "example": "john@example.com"
                                     },
                                     "servicios_id": {
-                                        "type": "id",
-                                        "example": "1"
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "encargado_id": {
+                                        "type": "integer",
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"
@@ -385,7 +409,12 @@
                     "404": {
                         "description": "Client not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/clientes/{cliente}": {
@@ -415,7 +444,12 @@
                     "404": {
                         "description": "Client not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/encargados": {
@@ -457,7 +491,12 @@
                     "401": {
                         "description": "Unauthorized"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/encargados/store": {
@@ -481,10 +520,6 @@
                                         "type": "string",
                                         "example": "John Doe"
                                     },
-                                    "cliente_id": {
-                                        "type": "id",
-                                        "example": "1"
-                                    },
                                     "apellido": {
                                         "type": "string",
                                         "example": "perez"
@@ -505,7 +540,12 @@
                     "422": {
                         "description": "Unprocessable Entity"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/encargados/{id}/show": {
@@ -555,7 +595,12 @@
                     "404": {
                         "description": "encargado not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/encargados/{encargado}/update": {
@@ -593,10 +638,6 @@
                                     "apellido": {
                                         "type": "string",
                                         "example": "123 Main St"
-                                    },
-                                    "cliente_id": {
-                                        "type": "id",
-                                        "example": "1"
                                     }
                                 },
                                 "type": "object"
@@ -617,7 +658,59 @@
                     "404": {
                         "description": "Client not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/roles": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Get a listing of the Roles",
+                "operationId": "29a9ef1155ba1b1eeefba13790f03f2f",
+                "parameters": [
+                    {
+                        "name": "nombre",
+                        "in": "query",
+                        "description": "Filter by a role name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "paginacion",
+                        "in": "query",
+                        "description": "Number of rows per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/servicios": {
@@ -660,7 +753,12 @@
                     "401": {
                         "description": "Unauthorized"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/servicios/store": {
@@ -705,7 +803,12 @@
                     "422": {
                         "description": "Unprocessable Entity"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/servicios/{id}/show": {
@@ -755,7 +858,12 @@
                     "404": {
                         "description": "Client not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/servicios/{servicio}/update": {
@@ -812,7 +920,12 @@
                     "422": {
                         "description": "Unprocessable Entity"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/servicios/{servicio}": {
@@ -842,7 +955,102 @@
                     "404": {
                         "description": "Service not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users/asignar-rol": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Asignar un rol a un usuario",
+                "operationId": "96ac70f9011827ebb5dd07e9d461010b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "usuario_id": {
+                                        "description": "ID del usuario",
+                                        "type": "integer",
+                                        "format": "int64"
+                                    },
+                                    "role_id": {
+                                        "description": "id del rol a asignar",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Rol asignado con éxito"
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a listing of the users",
+                "operationId": "c457726701591d1183b53aa71fc13441",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Filter by users name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "paginacion",
+                        "in": "query",
+                        "description": "Number of rows per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },

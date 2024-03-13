@@ -10,6 +10,8 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\EncargadoController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RolesController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,8 +32,31 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    // Rutas de Clientes
+    Route::prefix('clientes')->group(function () {
+        Route::get('/', [ClientesController::class, 'index']);
+        Route::post('/store', [ClientesController::class, 'store']);
+        Route::get('/{cliente}/show', [ClientesController::class, 'show']);
+        Route::put('/{cliente}/update', [ClientesController::class, 'update']);
+        Route::delete('/{cliente}', [ClientesController::class, 'destroy']);
+    });
 
+   // Rutas de asignarRole
+Route::prefix('users')->group(function () {
+    Route::get('/', [UserController::class, 'index']);
+    Route::post('/asignar-rol', [UserController::class, 'asignarRol']);
+    Route::get('/{User}/show', [UserController::class, 'show']);
+    Route::put('/{User}/update', [UserController::class, 'update']);
+    Route::delete('/{User}', [UserController::class, 'destroy']);
+});
 
+// Rutas de roles
+Route::prefix('roles')->group(function () {
+    Route::get('/', [RolesController::class, 'index']);
+    Route::post('/store', [RolesController::class, 'store']);
+    Route::get('/{role}/show', [RolesController::class, 'show']);
+    Route::put('/{role}/update', [RolesController::class, 'update']);
+    Route::delete('/{role}', [RolesController::class, 'destroy']);
 });
 
 // Rutas de encargados
@@ -42,14 +67,6 @@ Route::prefix('encargados')->group(function () {
     Route::put('/{encargado}/update', [EncargadoController::class, 'update']);
     Route::delete('/{encargado}', [EncargadoController::class, 'destroy']);
 });
-// Rutas de Clientes
-Route::prefix('clientes')->group(function () {
-    Route::get('/', [ClientesController::class, 'index']);
-    Route::post('/store', [ClientesController::class, 'store']);
-    Route::get('/{cliente}/show', [ClientesController::class, 'show']);
-    Route::put('/{cliente}/update', [ClientesController::class, 'update']);
-    Route::delete('/{cliente}', [ClientesController::class, 'destroy']);
-});
 
 // Rutas de Servicios
 Route::prefix('servicios')->group(function () {
@@ -59,6 +76,15 @@ Route::prefix('servicios')->group(function () {
     Route::put('/{servicio}/update', [ServiciosController::class, 'update']);
     Route::delete('/{servicio}', [ServiciosController::class, 'destroy']);
 });
+
+});
+
+
+
+
+
+
+
 
 
 
@@ -73,6 +99,7 @@ Route::get('/', function () {
 });
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
 
 
 // Esta ruta puede requerir autenticación, dependiendo de tus necesidades
