@@ -9,6 +9,8 @@ use App\Models\Role;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\HasApiTokens;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegistroExitoso; 
 /**
  * @group Authentication
  *
@@ -67,6 +69,7 @@ class AuthController extends Controller
             'password' => bcrypt($request->password),
         ]);
         $user->roles()->attach(2);
+        Mail::to($user->email)->send(new RegistroExitoso($user));
         $token = $user->createToken('MyAppToken')->plainTextToken;
 
         return response()->json(['user' => $user, 'token' => $token], 200);
