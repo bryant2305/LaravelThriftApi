@@ -968,7 +968,7 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Asignar un rol a un usuario",
+                "summary": "Assign a role to a user ",
                 "operationId": "96ac70f9011827ebb5dd07e9d461010b",
                 "requestBody": {
                     "required": true,
