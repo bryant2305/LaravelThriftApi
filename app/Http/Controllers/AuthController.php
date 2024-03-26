@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\HasApiTokens;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\RegistroExitoso; 
+use App\Mail\RegistroExitoso;
 /**
  * @group Authentication
  *
@@ -20,6 +20,29 @@ class AuthController extends Controller
 {
     use HasApiTokens;
 
+    public function verify(Request $request, $id, $hash)
+    {
+        $user = \App\Models\User::find($id);
+
+        if (!$user) {
+            return redirect('/')->withErrors(['error' => 'User not found']);
+        }
+
+        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            return redirect('/')->withErrors(['error' => 'Invalid verification link']);
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect('/')->withErrors(['error' => 'Email already verified']);
+        }
+
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
+
+        return redirect('/')->with('status', 'Email verified successfully');
+    }
+    
    /**
  * @OA\Post(
  *     path="/api/register",
@@ -67,6 +90,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'email_verified'=> false
         ]);
         $user->roles()->attach(2);
         Mail::to($user->email)->send(new RegistroExitoso($user));
