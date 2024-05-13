@@ -31,7 +31,7 @@ class RegistroExitoso extends Mailable
      */
     public function build()
     {
-        return $this->subject('Registro Exitoso')
+        return $this->subject('Confirmation')
                     ->view('emails.registro-exitoso');
     }
 }
