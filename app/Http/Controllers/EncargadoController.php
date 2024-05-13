@@ -123,7 +123,6 @@ class EncargadoController extends Controller
         $request->validate([
             "nombre" => "required",
             "apellido"=>'required',
-            "cliente_id"=>"required"
         ]);
 
         try{
