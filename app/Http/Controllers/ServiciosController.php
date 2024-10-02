@@ -60,7 +60,7 @@ class ServiciosController extends Controller
 
         try{
             if ($user && $user->hasPermiso('leer'))
-               /// $nombre = $request->query('nombre');
+                $nombre = $request->query('nombre');
                 $paginacion = $request->query('paginacion');
 
                 $servicio = Servicios::nombre($nombre, $paginacion);
