@@ -12,6 +12,7 @@ use App\Http\Controllers\EncargadoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HealthCheckController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -77,6 +78,7 @@ Route::prefix('servicios')->group(function () {
     Route::delete('/{servicio}', [ServiciosController::class, 'destroy']);
 });
 
+
 });
 
 
@@ -104,3 +106,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Esta ruta puede requerir autenticación, dependiendo de tus necesidades
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+// Ruta de ping
+
+Route::get('/ping', [HealthCheckController::class, 'ping']);
