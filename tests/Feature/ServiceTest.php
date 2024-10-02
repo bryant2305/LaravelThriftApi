@@ -36,7 +36,6 @@ class ServiceTest extends TestCase
         $data = [
             'nombre' => 'Servicio de prueba',
             'precio' => '10.00',
-            // Añade más campos que sean necesarios para crear el servicio
         ];
 
         // Realiza la petición
