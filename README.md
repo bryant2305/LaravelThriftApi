@@ -19,3 +19,11 @@ Levantar: php:artisan serve
 OJO CON LOS PERMISOS , SOLO EL USUARIO ADMIN TIENE PERMISO DE HACER TODO , 
 EL USUARIO NORMAL SOLO TIENE PERMISO DE LEER 
 ( EL ADMIN PUEDE CONVERTIR EN ADMIN A UN USUARIO NORMAL)
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CON DOCKER 
+
+docker-compose --up
