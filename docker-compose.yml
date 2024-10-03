@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=nombre_base_datos
+      - DB_USERNAME=root
+      - DB_PASSWORD=bryant23
+    command: sh -c "php artisan migrate --force && php artisan db:seed --force && apache2-foreground"
+
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    environment:
+      MYSQL_ROOT_PASSWORD: bryant23
+      MYSQL_DATABASE: nombre_base_datos
+      MYSQL_PASSWORD: bryant23
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:
+    driver: local
