@@ -61,7 +61,7 @@ class EncargadoController extends Controller
             $apellido = $request->query('apellido');
             $paginacion = $request->query('paginacion');
 
-            $encargado = Encargado::apellido($apellido, $paginacion);
+            $encargado = Encargado::apellido($apellido, paginacion: $paginacion);
 
             return  EncargadoResource::collection($encargado);
         }
