@@ -1,4 +1,4 @@
-# LaravelThriftApi
+# LaravelThriftApi!
 
 API RESTful construida con Laravel para la gestión de usuarios, roles y permisos.
 
