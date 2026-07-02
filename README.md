@@ -1,4 +1,4 @@
-# LaravelThriftApi
+# LaravelThriftApi!
 
 API RESTful construida con Laravel para la gestión de usuarios, roles y permisos.
 
@@ -67,5 +67,3 @@ php artisan test
 ## Contribución
 ¡Las contribuciones son bienvenidas! Abre un issue o un pull request para sugerencias o mejoras.
 
-## Licencia
-Este proyecto está bajo la licencia MIT.
